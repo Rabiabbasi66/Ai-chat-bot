@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Real-Time Chat Application">
+    <meta name="theme-color" content="#6366f1">
+    <title>AI Chat - Intelligent Conversations</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Chat</span>
+                </div>
+                <button class="btn-icon" id="closeSidebar" aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <button class="btn btn-primary btn-new-chat" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                <span>New Chat</span>
+            </button>
+            
+            <div class="chat-list" id="chatList">
+                <div class="chat-list-header">
+                    <h3>Recent Chats</h3>
+                    <button class="btn-icon" id="refreshChats" aria-label="Refresh chats">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                </div>
+                <div class="chat-items" id="chatItems">
+                    <!-- Chat items will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile" id="userProfile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="username">Guest User</span>
+                        <span class="status">Online</span>
+                    </div>
+                    <button class="btn-icon" id="settingsBtn" aria-label="Settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="chat-header">
+                <button class="btn-icon" id="toggleSidebar" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="chat-info">
+                    <h2 id="chatTitle">New Chat</h2>
+                    <span class="chat-status" id="chatStatus">
+                        <span class="status-dot"></span>
+                        <span>AI Assistant Online</span>
+                    </span>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="personalityBtn" aria-label="AI Personality" title="AI Personality">
+                        <i class="fas fa-brain"></i>
+                    </button>
+                    <button class="btn-icon" id="themeToggle" aria-label="Toggle theme" title="Toggle Theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn-icon" id="moreOptions" aria-label="More options">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Welcome Message -->
+                    <div class="message ai-message fade-in">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender-name">AI Assistant</span>
+                                <span class="message-time">Just now</span>
+                            </div>
+                            <div class="message-text">
+                                <p>👋 Hello! I'm your AI assistant. How can I help you today?</p>
+                                <p>Feel free to ask me anything - from answering questions to helping with creative tasks!</p>
+                            </div>
+                            <div class="message-actions">
+                                <button class="btn-action" data-action="copy" title="Copy">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button class="btn-action" data-action="like" title="Helpful">
+                                    <i class="far fa-thumbs-up"></i>
+                                </button>
+                                <button class="btn-action" data-action="dislike" title="Not helpful">
+                                    <i class="far fa-thumbs-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="message ai-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <button class="btn-icon" id="attachBtn" aria-label="Attach file">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Type your message..." 
+                        rows="1"
+                        maxlength="4000"
+                    ></textarea>
+                    
+                    <button class="btn-icon" id="emojiBtn" aria-label="Add emoji">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    
+                    <button class="btn btn-primary btn-send" id="sendBtn" aria-label="Send message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="input-hints">
+                    <span>Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for new line</span>
+                    <span id="charCount">0/4000</span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Personality Modal -->
+    <div class="modal" id="personalityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>AI Personality</h3>
+                <button class="btn-icon modal-close" id="closePersonalityModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="personality-options">
+                    <div class="personality-card" data-personality="helpful">
+                        <div class="personality-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h4>Helpful</h4>
+                        <p>Friendly and informative</p>
+                    </div>
+                    <div class="personality-card" data-personality="professional">
+                        <div class="personality-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4>Professional</h4>
+                        <p>Formal and detailed</p>
+                    </div>
+                    <div class="personality-card" data-personality="casual">
+                        <div class="personality-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <h4>Casual</h4>
+                        <p>Relaxed and conversational</p>
+                    </div>
+                    <div class="personality-card" data-personality="creative">
+                        <div class="personality-icon">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h4>Creative</h4>
+                        <p>Innovative and imaginative</p>
+                    </div>
+                    <div class="personality-card" data-personality="educational">
+                        <div class="personality-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4>Educational</h4>
+                        <p>Clear and instructive</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Settings</h3>
+                <button class="btn-icon modal-close" id="closeSettingsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Appearance</h4>
+                    <div class="setting-item">
+                        <label>Theme</label>
+                        <select id="themeSelect">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Font Size</label>
+                        <select id="fontSizeSelect">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>Notifications</h4>
+                    <div class="setting-item">
+                        <label>Enable Notifications</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Sound Effects</label>
+                        <label class="toggle">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>Privacy</h4>
+                    <div class="setting-item">
+                        <label>Clear Chat History</label>
+                        <button class="btn btn-danger" id="clearHistoryBtn">Clear All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Scripts -->
+    <script src="websocket.js"></script>
+    <script src="chat.js"></script>
+    <script src="ui.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
